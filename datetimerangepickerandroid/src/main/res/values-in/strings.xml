@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="invalid_date">Tanggal harus di antara %1$s dan %2$s.</string>
+</resources>

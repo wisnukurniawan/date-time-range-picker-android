@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="calendar_margin_4dp">4dp</dimen>
+    <dimen name="calendar_margin_8dp">8dp</dimen>
+    <dimen name="calendar_margin_16dp">16dp</dimen>
+    <dimen name="calendar_text_12sp">12sp</dimen>
+    <dimen name="calendar_text_14sp">14sp</dimen>
+</resources>
