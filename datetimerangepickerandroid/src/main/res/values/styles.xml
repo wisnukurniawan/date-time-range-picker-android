@@ -2,13 +2,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="CalendarTitle">
         <item name="android:textSize">@dimen/calendar_text_14sp</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:paddingBottom">@dimen/calendar_margin_16dp</item>
         <item name="android:paddingTop">@dimen/calendar_margin_16dp</item>
         <item name="android:paddingLeft">@dimen/calendar_margin_16dp</item>
         <item name="android:paddingRight">@dimen/calendar_margin_16dp</item>
         <item name="android:background">@color/calendar_title_bg</item>
-        <item name="android:textColor">@color/calendar_title_color</item>
+        <item name="android:textColor">@color/calendar_text_title</item>
     </style>
 
     <style name="CalendarCell">
@@ -24,11 +23,6 @@
 
     <style name="CalendarCell.CalendarDate">
         <item name="android:textSize">@dimen/calendar_text_14sp</item>
-    </style>
-
-    <style name="CalendarCellBackgroundContainer">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">match_parent</item>
     </style>
 
 </resources>

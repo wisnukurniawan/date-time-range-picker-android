@@ -5,6 +5,7 @@
     <attr name="dividerColor" format="color"/>
     <attr name="dayBackground" format="reference"/>
     <attr name="dayTextColor" format="color"/>
+    <attr name="dayHeaderTextColor" format="color"/>
     <attr name="titleTextStyle" format="reference"/>
     <attr name="displayHeader" format="boolean"/>
     <attr name="displayDayNamesHeaderRow" format="boolean"/>
