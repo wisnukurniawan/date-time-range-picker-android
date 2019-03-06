@@ -16,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
         CalendarPickerView cal = findViewById(R.id.calendar_view);
         cal.init(
             DateTime.now(DateTimeZone.UTC).minusYears(1).toDate(),
-            DateTime.now(DateTimeZone.UTC).toDate()
+            DateTime.now(DateTimeZone.UTC).plusDays(4).toDate()
         )
             .inMode(CalendarPickerView.SelectionMode.RANGE)
-            .withSelectedDate(DateTime.now(DateTimeZone.UTC).minusDays(1).toDate());
+            .withSelectedDate(DateTime.now(DateTimeZone.UTC).minusDays(1).plusDays(4).toDate());
     }
 }

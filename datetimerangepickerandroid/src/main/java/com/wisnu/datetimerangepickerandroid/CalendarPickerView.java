@@ -15,6 +15,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.view.NestedScrollingChildHelper;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -40,7 +42,7 @@ import java.util.TimeZone;
  * Android component to allow picking a date from a calendar view (a list of months).  Must be initialized after inflation with {@link #init(Date, Date)} and can be customized with any of the {@link
  * FluentInitializer} methods returned.  The currently selected date can be retrieved with {@link #getSelectedDate()}.
  */
-public class CalendarPickerView extends ListView {
+public class CalendarPickerView extends ListView implements NestedScrollingChild {
 
     public enum SelectionMode {
         /**
@@ -106,6 +108,8 @@ public class CalendarPickerView extends ListView {
 
     private boolean monthsReverseOrder;
 
+    private final NestedScrollingChildHelper scrollingChildHelper;
+
     private final StringBuilder monthBuilder = new StringBuilder(50);
     private Formatter monthFormatter;
 
@@ -161,6 +165,8 @@ public class CalendarPickerView extends ListView {
         weekdayNameFormat.setTimeZone(timeZone);
         fullDateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
         fullDateFormat.setTimeZone(timeZone);
+        scrollingChildHelper = new NestedScrollingChildHelper(this);
+        setNestedScrollingEnabled(true);
 
         if (isInEditMode()) {
             Calendar nextYear = Calendar.getInstance(timeZone, locale);
@@ -1112,4 +1118,50 @@ public class CalendarPickerView extends ListView {
 //      Toast.makeText(getContext(), errMessage, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void setNestedScrollingEnabled(boolean enabled) {
+        scrollingChildHelper.setNestedScrollingEnabled(true);
+    }
+
+    @Override
+    public boolean isNestedScrollingEnabled() {
+        return scrollingChildHelper.isNestedScrollingEnabled();
+    }
+
+    @Override
+    public boolean startNestedScroll(int axes) {
+        return scrollingChildHelper.startNestedScroll(axes);
+    }
+
+    @Override
+    public void stopNestedScroll() {
+        scrollingChildHelper.stopNestedScroll();
+    }
+
+    @Override
+    public boolean hasNestedScrollingParent() {
+        return scrollingChildHelper.hasNestedScrollingParent();
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return scrollingChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+    }
+
+    @Override
+    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+        return scrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+    }
+
+    @Override
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return scrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return scrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
 }
