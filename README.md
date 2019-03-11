@@ -21,7 +21,7 @@ Add the dependency:
 
 ```
 dependencies {
-	implementation 'com.github.wisnukurniawan:date-time-range-picker-android:1.0.0'
+	implementation "com.github.wisnukurniawan:date-time-range-picker-android:${version}"
 }
 
 ```
