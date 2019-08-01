@@ -10,7 +10,7 @@
     <color name="calendar_text_title">#52575C</color>
     <color name="calendar_text_day_header">#66000000</color>
 
-    <color name="calendar_selected_day_bg">#31B057</color>
+    <color name="calendar_selected_day_bg">#38AF5B</color>
     <color name="calendar_selected_range_bg">#E2F7E8</color>
     <color name="calendar_inactive_month_bg">#ffd7d9db</color>
     <color name="calendar_active_month_bg">#e91759</color>
