@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="#E2F7E8" />
+            <solid android:color="@color/calendar_selected_range_bg" />
         </shape>
     </item>
 </layer-list>
