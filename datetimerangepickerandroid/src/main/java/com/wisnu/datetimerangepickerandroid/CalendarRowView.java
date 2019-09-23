@@ -36,6 +36,7 @@ public class CalendarRowView extends ViewGroup implements View.OnClickListener {
         final int totalWidth = MeasureSpec.getSize(widthMeasureSpec);
         int rowHeight = 0;
         int cellHeightSpec = makeMeasureSpec(totalWidth, AT_MOST);
+        boolean isSmallScreen = getContext().getResources().getDisplayMetrics().density <= 1.5f; // HDPI
         for (int c = 0, numChildren = getChildCount(); c < numChildren; c++) {
             final View child = getChildAt(c);
             // Calculate width cells, making sure to cover totalWidth.
@@ -49,7 +50,15 @@ public class CalendarRowView extends ViewGroup implements View.OnClickListener {
             child.measure(cellWidthSpec, cellHeightSpec);
             // The row height is the height of the tallest cell.
             if (child.getMeasuredHeight() > rowHeight) {
-                rowHeight = child.getMeasuredHeight();
+                if (isSmallScreen) {
+                    if (isHeaderRow) {
+                        rowHeight = child.getMeasuredHeight();
+                    } else {
+                        rowHeight = cellSize;
+                    }
+                } else  {
+                    rowHeight = child.getMeasuredHeight();
+                }
             }
         }
         final int widthWithPadding = totalWidth + getPaddingLeft() + getPaddingRight();
