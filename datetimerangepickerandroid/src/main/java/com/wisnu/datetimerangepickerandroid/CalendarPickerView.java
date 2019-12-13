@@ -103,6 +103,7 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
     private OnInvalidDateSelectedListener invalidDateListener =
         new DefaultOnInvalidDateSelectedListener();
     private CellClickInterceptor cellClickInterceptor;
+    private OnDateResolvedListener dateResolvedListener;
     private List<CalendarCellDecorator> decorators;
     private DayViewAdapter dayViewAdapter = new DefaultDayViewAdapter();
 
@@ -599,13 +600,13 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
      * @return - whether we were able to set the date
      */
     public boolean selectDate(Date date, boolean smoothScroll) {
-        validateDate(date);
+        Date newDate = validateAndUpdate(date);
 
-        MonthCellWithMonthIndex monthCellWithMonthIndex = getMonthCellWithIndexByDate(date);
-        if (monthCellWithMonthIndex == null || !isDateSelectable(date)) {
+        MonthCellWithMonthIndex monthCellWithMonthIndex = getMonthCellWithIndexByDate(newDate);
+        if (monthCellWithMonthIndex == null || !isDateSelectable(newDate)) {
             return false;
         }
-        boolean wasSelected = doSelectDate(date, monthCellWithMonthIndex.cell);
+        boolean wasSelected = doSelectDate(newDate, monthCellWithMonthIndex.cell);
         if (wasSelected) {
             scrollToSelectedMonth(monthCellWithMonthIndex.monthIndex, smoothScroll);
         }
@@ -658,16 +659,23 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
         return dateFormatted;
     }
 
-    private void validateDate(Date date) {
+    private Date validateAndUpdate(Date date) {
         if (date == null) {
             throw new IllegalArgumentException("Selected date must be non-null.");
         }
-        if (date.before(minCal.getTime()) || date.after(maxCal.getTime())) {
-            throw new IllegalArgumentException(String.format(
-                "SelectedDate must be between minDate and maxDate."
-                    + "%nminDate: %s%nmaxDate: %s%nselectedDate: %s", minCal.getTime(), maxCal.getTime(),
-                date));
+        if (date.before(minCal.getTime())) {
+            if (dateResolvedListener != null) {
+                dateResolvedListener.onMinDateResolved(minCal.getTime());
+            }
+            return minCal.getTime();
         }
+        if (date.after(maxCal.getTime())) {
+            if (dateResolvedListener != null) {
+                dateResolvedListener.onMaxDateResolved(maxCal.getTime());
+            }
+            return maxCal.getTime();
+        }
+        return date;
     }
 
     private boolean doSelectDate(Date date, MonthCellDescriptor cell) {
@@ -793,12 +801,12 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
 
     public void highlightDates(Collection<Date> dates) {
         for (Date date : dates) {
-            validateDate(date);
+            Date newDate = validateAndUpdate(date);
 
-            MonthCellWithMonthIndex monthCellWithMonthIndex = getMonthCellWithIndexByDate(date);
+            MonthCellWithMonthIndex monthCellWithMonthIndex = getMonthCellWithIndexByDate(newDate);
             if (monthCellWithMonthIndex != null) {
                 Calendar newlyHighlightedCal = Calendar.getInstance(timeZone, locale);
-                newlyHighlightedCal.setTime(date);
+                newlyHighlightedCal.setTime(newDate);
                 MonthCellDescriptor cell = monthCellWithMonthIndex.cell;
 
                 highlightedCells.add(cell);
@@ -1065,6 +1073,13 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
     }
 
     /**
+     * Set a listener to react to user after selected date based on min or max date resolved.
+     */
+    public void setOnDateResolvedListener(OnDateResolvedListener listener) {
+        dateResolvedListener = listener;
+    }
+
+    /**
      * Interface to be notified when a new date is selected or unselected. This will only be called when the user initiates the date selection.  If you call {@link #selectDate(Date)} this listener
      * will not be notified.
      *
@@ -1106,6 +1121,18 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
     public interface CellClickInterceptor {
 
         boolean onCellClicked(Date date);
+    }
+
+    /**
+     * Interface to be notified when a date out of range.
+     *
+     * @see #setOnDateResolvedListener(OnDateResolvedListener)
+     */
+    public interface OnDateResolvedListener {
+
+        void onMinDateResolved(Date date);
+
+        void onMaxDateResolved(Date date);
     }
 
     private class DefaultOnInvalidDateSelectedListener implements OnInvalidDateSelectedListener {
