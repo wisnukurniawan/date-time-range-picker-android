@@ -196,16 +196,14 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
             throw new IllegalArgumentException(
                 "minDate and maxDate must be non-null.  " + dbg(minDate, maxDate));
         }
-        if (minDate.after(maxDate)) {
-            throw new IllegalArgumentException(
-                "minDate must be before maxDate.  " + dbg(minDate, maxDate));
-        }
         if (locale == null) {
             throw new IllegalArgumentException("Locale is null.");
         }
         if (timeZone == null) {
             throw new IllegalArgumentException("Time zone is null.");
         }
+
+        Date newMinDate = validateAndUpdateMinDate(minDate, maxDate);
 
         // Make sure that all calendar instances use the same time zone and locale.
         this.timeZone = timeZone;
@@ -234,7 +232,7 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
         // Clear previous state.
         cells.clear();
         months.clear();
-        minCal.setTime(minDate);
+        minCal.setTime(newMinDate);
         maxCal.setTime(maxDate);
         setMidnight(minCal);
         setMidnight(maxCal);
@@ -263,6 +261,18 @@ public class CalendarPickerView extends ListView implements NestedScrollingChild
 
         validateAndUpdate();
         return new FluentInitializer();
+    }
+
+    private Date validateAndUpdateMinDate(Date minDate, Date maxDate) {
+        if (minDate.after(maxDate)) {
+            Date newMinDate = new Date(maxDate.getTime() + ((24 * 3600 * 1000) * -1));
+            if (dateResolvedListener != null) {
+                dateResolvedListener.onMinDateResolved(newMinDate);
+            }
+            return newMinDate;
+        } else  {
+            return minDate;
+        }
     }
 
     /**
