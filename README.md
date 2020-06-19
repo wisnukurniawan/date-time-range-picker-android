@@ -1,5 +1,11 @@
-Date Time Range Picker for Android customize from [android-times-square](https://github.com/square/android-times-square)
+Date Time Range Picker for Android by [android-times-square](https://github.com/square/android-times-square) added some improvement
 ==========================
+
+## Improvement
+- Support nested scrolling
+- Support vector drawable
+- Small screen enhancement
+- Remove out of date range exception move to nearest date instead
 
 Standalone Android widget for picking a single date from a calendar view.
 
