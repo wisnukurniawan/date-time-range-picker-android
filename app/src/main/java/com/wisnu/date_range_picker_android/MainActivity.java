@@ -1,7 +1,7 @@
 package com.wisnu.date_range_picker_android;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import com.wisnu.datetimerangepickerandroid.CalendarPickerView;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         final CalendarPickerView cal = findViewById(R.id.calendar_view);
         cal.init(
-                DateTime.now(DateTimeZone.UTC).toDate(),
+                buildMinimumDate(),
                 DateTime.now(DateTimeZone.UTC).plusDays(10).toDate()
         )
                 .inMode(CalendarPickerView.SelectionMode.RANGE)
@@ -72,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("onMaxDateResolved", date.toString());
             }
         });
+    }
+
+    private Date buildMinimumDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.YEAR, 2019);
+
+        return calendar.getTime();
     }
 
 }
